@@ -27,12 +27,12 @@ class Container implements ContainerInterface
         /** @var Aliases $aliases */
         $aliases = $container->get(Aliases::class);
 
-        $yiiFile = $aliases->get('@vendor/involta-design/yii2-psr/src/Yii.php');
+        $yiiFile = $this->getYiiFilePath($aliases);
         if (file_exists($yiiFile)) {
             require $yiiFile;
+        } else {
+            throw new RuntimeException(sprintf("File %s not found", $yiiFile));
         }
-
-        throw new RuntimeException(sprintf("File %s not found", $yiiFile));
     }
 
     public function get($id)
@@ -43,5 +43,17 @@ class Container implements ContainerInterface
     public function has($id): bool
     {
         return $this->container->has($id);
+    }
+
+    final private function getYiiFilePath(Aliases $aliases): string
+    {
+        try {
+            $vandor = $aliases->get('@vendor');
+        } catch (\Throwable $e) {
+            $vandor = $aliases->get('@root/vendor');
+            $aliases->set('@vendor', $vandor);
+        }
+
+        return $vandor . '/involta-design/yii2-psr/src/Yii.php';
     }
 }

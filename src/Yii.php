@@ -32,6 +32,8 @@ class Yii extends BaseYii
     }
 }
 
+$aliases->set('@yii', '@vendor/yiisoft/yii2');
+
 spl_autoload_register(['Yii', 'autoload'], true, true);
 Yii::$classMap = $aliases->get('@vendor/yiisoft/yii2/classes.php');
 Yii::$container = $container;

@@ -2,14 +2,11 @@
 
 namespace Involta\Yii\Web;
 
-use http\Exception\InvalidArgumentException;
+use Involta\Yii\Configurator;
 use Psr\Container\ContainerInterface;
 use yii\base\Action;
 use yii\base\Module;
-use yii\helpers\VarDumper;
 use yii\web\Controller;
-use Yiisoft\Aliases\Aliases;
-use Yiisoft\Arrays\ArrayHelper;
 
 /**
  * Class Application
@@ -36,16 +33,10 @@ final class Application extends \yii\Psr7\web\Application
         /** @var ContainerInterface $container */
         $container = $config['container'];
 
-        /** @var Aliases $aliases */
-        $aliases = $container->get(Aliases::class);
-
-        $config['aliases'] = ArrayHelper::merge(
-            [
-                '@vendor' => $aliases->get('@vendor'),
-                '@bower' => $aliases->get('@vendor/bower-asset'),
-            ],
-            is_array($config['aliases']) ? $config['aliases'] : []
-        );
+        $config = (new Configurator($container))
+            ->withConfig($config)
+            ->withPsr3() // logger
+            ->apply();
 
         parent::__construct($config);
     }

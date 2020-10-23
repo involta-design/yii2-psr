@@ -14,6 +14,7 @@
         "yiisoft/aliases": "^1.0",
         "yiisoft/arrays": "3.0.x-dev",
         "psr/container": "^1.0",
+        "samdark/yii2-psr-log-target": "^1.1",
         "yiisoft/yii2": "^2.0"
     }
     ,
